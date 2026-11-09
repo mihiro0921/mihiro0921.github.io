@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TOEIC Capture Auto Post — Authorization</title>
+    <style>
+      body { margin: 0; background: #ffffff; color: #1a1a1a; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif; font-size: 17px; line-height: 1.7; }
+      .wrap { max-width: 680px; margin: 0 auto; padding: 48px 24px 80px; }
+      h1 { font-size: 24px; margin: 0 0 12px; }
+      code { display: block; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 15px; background: #f4f4f4; border: 1px solid #e2e2e2; border-radius: 6px; padding: 14px 16px; margin: 16px 0; word-break: break-all; white-space: pre-wrap; }
+      .err { color: #b3261e; }
+      button { font-size: 16px; padding: 10px 20px; border: 1px solid #0b57d0; color: #0b57d0; background: #fff; border-radius: 6px; cursor: pointer; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>TOEIC Capture Auto Post — Authorization</h1>
+      <div id="out">Reading the authorization result…</div>
+    </div>
+    <script>
+      (function () {
+        var params = new URLSearchParams(window.location.search);
+        var out = document.getElementById('out');
+        var code = params.get('code');
+        var error = params.get('error') || params.get('error_description');
+        if (code) {
+          out.innerHTML = '<p>Authorization succeeded. Copy the code below and send it to the app operator. The code expires in a few minutes, so send it right away.</p>';
+          var c = document.createElement('code');
+          c.id = 'codebox';
+          c.textContent = code;
+          out.appendChild(c);
+          var b = document.createElement('button');
+          b.textContent = 'Copy code';
+          b.addEventListener('click', function () {
+            if (navigator.clipboard) { navigator.clipboard.writeText(code); b.textContent = 'Copied'; }
+          });
+          out.appendChild(b);
+        } else if (error) {
+          var p = document.createElement('p');
+          p.className = 'err';
+          p.textContent = 'Authorization failed: ' + error;
+          out.appendChild(p);
+        } else {
+          out.innerHTML = '<p>No authorization code was found in this URL. Start the authorization from the link provided by the app operator.</p>';
+        }
+      })();
+    </script>
+  </body>
+</html>
